@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 
         remove(gszFile);
         db.open(gszFile);
-
+        db.rekey("abc");
         cout << endl << "Creating emp table" << endl;
         db.execDML("create table emp(empno int, empname char(20));");
         ///////////////////////////////////////////////////////////////
