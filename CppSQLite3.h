@@ -5,10 +5,14 @@
  * See LICENSE file for copyright and license info
 */
 
+#ifndef SQLITE_HAS_CODEC
+#define SQLITE_HAS_CODEC
+#endif
+
 #ifndef CppSQLite3_H
 #define CppSQLite3_H
 
-#include <sqlite3.h>
+#include "sqlite3.h"
 #include <cstdio>
 #include <cstring>
 
@@ -292,6 +296,8 @@ public:
 
     void open(const char* szFile);
 
+    void open(const char* szFile, const char* szPass);
+
     void close();
 
     bool tableExists(const char* szTable);
@@ -314,6 +320,7 @@ public:
 
     static const char* SQLiteVersion() { return SQLITE_VERSION; }
 
+    void rekey(const char* szPass);
 private:
 
     CppSQLite3DB(const CppSQLite3DB& db);
