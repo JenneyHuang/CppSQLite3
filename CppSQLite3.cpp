@@ -1193,6 +1193,21 @@ CppSQLite3DB::CppSQLite3DB()
 }
 
 
+void CppSQLite3DB::rekey(const char* szPass)
+{
+    if (szPass != NULL)
+    {
+        int nRet = sqlite3_rekey(mpDB, szPass, strlen(szPass));
+        if (nRet != SQLITE_OK)
+        {
+            const char* szError = sqlite3_errmsg(mpDB);
+            throw CppSQLite3Exception(nRet, (char*)szError, DONT_DELETE_MSG);
+        }
+
+    }
+    setBusyTimeout(mnBusyTimeoutMs);
+}
+
 CppSQLite3DB::CppSQLite3DB(const CppSQLite3DB& db)
 {
     mpDB = db.mpDB;
@@ -1227,6 +1242,28 @@ void CppSQLite3DB::open(const char* szFile)
     setBusyTimeout(mnBusyTimeoutMs);
 }
 
+void CppSQLite3DB::open(const char* szFile, const char* szPass)
+
+{
+
+    int nRet = sqlite3_open(szFile, &mpDB);
+    if (nRet != SQLITE_OK)
+    {
+        const char* szError = sqlite3_errmsg(mpDB);
+        throw CppSQLite3Exception(nRet, (char*)szError, DONT_DELETE_MSG);
+    }
+    if (szPass != NULL)
+    {
+        int nRet = sqlite3_key(mpDB, szPass, strlen(szPass));
+        if (nRet != SQLITE_OK)
+        {
+            const char* szError = sqlite3_errmsg(mpDB);
+            throw CppSQLite3Exception(nRet, (char*)szError, DONT_DELETE_MSG);
+        }
+    }
+    setBusyTimeout(mnBusyTimeoutMs);
+
+}
 
 void CppSQLite3DB::close()
 {
