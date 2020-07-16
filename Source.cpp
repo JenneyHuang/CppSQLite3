@@ -16,17 +16,19 @@ int main(int argc, char** argv)
 		int i, fld;
 		time_t tmStart, tmEnd;
 		CppSQLite3DB db;
-
 		cout << "SQLite Version: " << db.SQLiteVersion() << endl;
-
 		remove(gszFile);
-		db.open(gszFile);
-		db.rekey("abc");
-		cout << endl << "Creating emp table" << endl;
+		db.open(gszFile,"abc");
+		//db.rekey("abc");
+
 		db.enable_load_extension(true);
 		db.execDML("select load_extension('mod_spatialite');");
-		
-		db.execDML("create table emp(empno int, empname char(20));");
+		cout << "Spatialite Version: " << db.execScalar("select spatialite_version();") << endl;
+
+		cout << endl << "Creating emp table" << endl;
+
+		cout << "Init spatilaite db" << db.execScalar("select InitSpatialMetaData();") <<endl;
+		db.execDML("create table if not exists emp(empno int, empname char(20));");
 		///////////////////////////////////////////////////////////////
 		// Execute some DML, and print number of rows affected by each one
 		///////////////////////////////////////////////////////////////
@@ -74,7 +76,7 @@ int main(int argc, char** argv)
 		cout << endl << "Auto increment test" << endl;
 		db.execDML("drop table emp;");
 		db.execDML(
-			"create table emp(empno integer primary key, empname char(20));");
+			"create table if not exists emp(empno integer primary key, empname char(20));");
 		cout << nRows << " rows deleted" << endl;
 
 		for (i = 0; i < 5; i++)
@@ -194,7 +196,7 @@ int main(int argc, char** argv)
 		cout << endl << "Transaction test, creating " << nRowsToCreate;
 		cout << " rows please wait..." << endl;
 		//db.execDML("drop table emp;");
-		db.execDML("create table emp(empno int, empname char(20));");
+		db.execDML("create table if not exists emp(empno int, empname char(20));");
 		tmStart = time(0);
 		db.execDML("begin transaction;");
 
