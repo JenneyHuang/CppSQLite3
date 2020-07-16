@@ -1208,6 +1208,20 @@ void CppSQLite3DB::rekey(const char* szPass)
     setBusyTimeout(mnBusyTimeoutMs);
 }
 
+int CppSQLite3DB::enable_load_extension(int onoff)
+{
+	if (onoff!=NULL)
+	{ 
+		int nRet = sqlite3_enable_load_extension(mpDB, onoff);
+		if (nRet != SQLITE_OK)
+		{
+			const char* szError = sqlite3_errmsg(mpDB);
+			throw CppSQLite3Exception(nRet, (char*)szError, DONT_DELETE_MSG);
+		}
+	}
+	setBusyTimeout(mnBusyTimeoutMs);
+}
+
 CppSQLite3DB::CppSQLite3DB(const CppSQLite3DB& db)
 {
     mpDB = db.mpDB;

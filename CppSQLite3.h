@@ -9,6 +9,7 @@
 #define SQLITE_HAS_CODEC
 #endif
 
+
 #ifndef CppSQLite3_H
 #define CppSQLite3_H
 
@@ -321,6 +322,8 @@ public:
     static const char* SQLiteVersion() { return SQLITE_VERSION; }
 
     void rekey(const char* szPass);
+
+	int enable_load_extension(int onoff);
 private:
 
     CppSQLite3DB(const CppSQLite3DB& db);
